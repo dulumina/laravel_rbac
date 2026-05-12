@@ -48,9 +48,9 @@ export default function PermissionIndex({ permissions }: Props) {
     const groups = Object.keys(groupedPermissions).sort();
 
     return (
-        <div className="p-6">
+        <div className="p-4 sm:p-6 lg:p-8">
             <Head title="Permission Management" />
-            <div className="space-y-6">
+            <div className="max-w-7xl mx-auto space-y-6">
                 <Card
                     title={
                         <Space>

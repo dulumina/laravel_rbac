@@ -1,17 +1,11 @@
 import { Head, Link } from '@inertiajs/react';
-import { Eye, Pencil, Plus } from 'lucide-react';
+import { Typography, List, Tag, Button, Tooltip, Space } from 'antd';
+import { PlusOutlined, EditOutlined, EyeOutlined } from '@ant-design/icons';
 import CreateTeamModal from '@/components/create-team-modal';
-import Heading from '@/components/heading';
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
-import {
-    Tooltip,
-    TooltipContent,
-    TooltipProvider,
-    TooltipTrigger,
-} from '@/components/ui/tooltip';
 import { edit, index } from '@/routes/teams';
 import type { Team } from '@/types';
+
+const { Title, Text } = Typography;
 
 type Props = {
     teams: Team[];
@@ -22,102 +16,53 @@ export default function TeamsIndex({ teams }: Props) {
         <>
             <Head title="Teams" />
 
-            <h1 className="sr-only">Teams</h1>
-
-            <div className="flex flex-col space-y-6">
+            <div className="space-y-8">
                 <div className="flex items-center justify-between">
-                    <Heading
-                        variant="small"
-                        title="Teams"
-                        description="Manage your teams and team memberships"
-                    />
+                    <div>
+                        <Title level={4}>Teams</Title>
+                        <Text type="secondary">Manage your teams and team memberships</Text>
+                    </div>
 
                     <CreateTeamModal>
-                        <Button data-test="teams-new-team-button">
-                            <Plus /> New team
+                        <Button type="primary" icon={<PlusOutlined />} size="large">
+                            New Team
                         </Button>
                     </CreateTeamModal>
                 </div>
 
-                <div className="space-y-3">
-                    {teams.map((team) => (
-                        <div
-                            key={team.id}
-                            data-test="team-row"
-                            className="flex items-center justify-between rounded-lg border p-4"
+                <List
+                    itemLayout="horizontal"
+                    dataSource={teams}
+                    locale={{ emptyText: <Text type="secondary">You don't belong to any teams yet.</Text> }}
+                    renderItem={(team) => (
+                        <List.Item
+                            actions={[
+                                <Tooltip title={team.role === 'member' ? 'View Team' : 'Edit Team'} key="action">
+                                    <Button
+                                        icon={team.role === 'member' ? <EyeOutlined /> : <EditOutlined />}
+                                        type="text"
+                                        asChild
+                                    >
+                                        <Link href={edit(team.slug).url} />
+                                    </Button>
+                                </Tooltip>
+                            ]}
+                            className="bg-white hover:bg-gray-50 transition-colors p-5 rounded-xl mb-3 border border-gray-100 shadow-sm"
                         >
-                            <div className="flex items-center gap-4">
-                                <div>
-                                    <div className="flex items-center gap-2">
-                                        <span className="font-medium">
-                                            {team.name}
-                                        </span>
-                                        {team.isPersonal ? (
-                                            <Badge variant="secondary">
-                                                Personal
-                                            </Badge>
-                                        ) : null}
-                                    </div>
-                                    <span className="text-sm text-muted-foreground">
-                                        {team.roleLabel}
-                                    </span>
-                                </div>
-                            </div>
-
-                            <TooltipProvider>
-                                <div className="flex items-center gap-2">
-                                    {team.role === 'member' ? (
-                                        <Tooltip>
-                                            <TooltipTrigger asChild>
-                                                <Button
-                                                    variant="ghost"
-                                                    size="sm"
-                                                    data-test="team-view-button"
-                                                    asChild
-                                                >
-                                                    <Link
-                                                        href={edit(team.slug)}
-                                                    >
-                                                        <Eye className="h-4 w-4" />
-                                                    </Link>
-                                                </Button>
-                                            </TooltipTrigger>
-                                            <TooltipContent>
-                                                <p>View team</p>
-                                            </TooltipContent>
-                                        </Tooltip>
-                                    ) : (
-                                        <Tooltip>
-                                            <TooltipTrigger asChild>
-                                                <Button
-                                                    variant="ghost"
-                                                    size="sm"
-                                                    data-test="team-edit-button"
-                                                    asChild
-                                                >
-                                                    <Link
-                                                        href={edit(team.slug)}
-                                                    >
-                                                        <Pencil className="h-4 w-4" />
-                                                    </Link>
-                                                </Button>
-                                            </TooltipTrigger>
-                                            <TooltipContent>
-                                                <p>Edit team</p>
-                                            </TooltipContent>
-                                        </Tooltip>
-                                    )}
-                                </div>
-                            </TooltipProvider>
-                        </div>
-                    ))}
-
-                    {teams.length === 0 ? (
-                        <p className="py-8 text-center text-muted-foreground">
-                            You don't belong to any teams yet.
-                        </p>
-                    ) : null}
-                </div>
+                            <List.Item.Meta
+                                title={
+                                    <Space>
+                                        <Text strong>{team.name}</Text>
+                                        {team.isPersonal && (
+                                            <Tag color="blue" className="rounded-full">Personal</Tag>
+                                        )}
+                                    </Space>
+                                }
+                                description={<Text type="secondary">{team.roleLabel}</Text>}
+                            />
+                        </List.Item>
+                    )}
+                />
             </div>
         </>
     );
@@ -127,7 +72,7 @@ TeamsIndex.layout = {
     breadcrumbs: [
         {
             title: 'Teams',
-            href: index(),
+            href: index().url,
         },
     ],
 };

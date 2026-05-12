@@ -13,6 +13,41 @@ use Spatie\Permission\Models\Role;
 class UserController extends Controller
 {
     /**
+     * Show the form for creating a new user.
+     */
+    public function create(): Response
+    {
+        return Inertia::render('admin/users/create', [
+            'availableRoles' => Role::all()->pluck('name'),
+        ]);
+    }
+
+    /**
+     * Store a newly created user in storage.
+     */
+    public function store(Request $request): RedirectResponse
+    {
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|string|email|max:255|unique:users',
+            'password' => 'required|string|min:8|confirmed',
+            'roles' => 'array',
+        ]);
+
+        $user = User::create([
+            'name' => $request->name,
+            'email' => $request->email,
+            'password' => bcrypt($request->password),
+        ]);
+
+        if ($request->has('roles')) {
+            $user->assignRole($request->roles);
+        }
+
+        return redirect()->route('admin.users.index')->with('success', 'User created successfully.');
+    }
+
+    /**
      * Display a listing of the users.
      */
     public function index(): Response

@@ -2,7 +2,7 @@ import { DeleteOutlined, EditOutlined, UserOutlined } from '@ant-design/icons';
 import { Head, Link, router } from '@inertiajs/react';
 import { Button, Card, Popconfirm, Space, Table, Tag, Typography } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
-import { destroy, edit, index } from '@/actions/App/Http/Controllers/Admin/UserController';
+import { create, destroy, edit, index } from '@/actions/App/Http/Controllers/Admin/UserController';
 
 interface User {
     id: number;
@@ -71,18 +71,27 @@ export default function UserIndex({ users }: Props) {
     ];
 
     return (
-        <div className="p-6">
+        <div className="p-4 sm:p-6 lg:p-8">
             <Head title="User Management" />
-            <Card
-                title={
-                    <Space>
-                        <UserOutlined />
-                        <span>User Management</span>
-                    </Space>
-                }
-            >
-                <Table columns={columns} dataSource={users} rowKey="id" pagination={{ pageSize: 10 }} />
-            </Card>
+            <div className="max-w-7xl mx-auto">
+                <Card
+                    title={
+                        <Space>
+                            <UserOutlined />
+                            <span>User Management</span>
+                        </Space>
+                    }
+                    extra={
+                        <Link href={create().url}>
+                            <Button type="primary" icon={<UserOutlined />}>
+                                Add User
+                            </Button>
+                        </Link>
+                    }
+                >
+                    <Table columns={columns} dataSource={users} rowKey="id" pagination={{ pageSize: 10 }} />
+                </Card>
+            </div>
         </div>
     );
 }

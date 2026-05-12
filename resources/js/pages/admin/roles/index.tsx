@@ -66,23 +66,25 @@ export default function RoleIndex({ roles }: Props) {
     ];
 
     return (
-        <div className="p-6">
+        <div className="p-4 sm:p-6 lg:p-8">
             <Head title="Role Management" />
-            <Card
-                title={
-                    <Space>
-                        <SafetyCertificateOutlined />
-                        <span>Role Management</span>
-                    </Space>
-                }
-                extra={
-                    <Link href={create().url}>
-                        <Button type="primary">Add Role</Button>
-                    </Link>
-                }
-            >
-                <Table columns={columns} dataSource={roles} rowKey="id" pagination={false} />
-            </Card>
+            <div className="max-w-7xl mx-auto">
+                <Card
+                    title={
+                        <Space>
+                            <SafetyCertificateOutlined />
+                            <span>Role Management</span>
+                        </Space>
+                    }
+                    extra={
+                        <Link href={create().url}>
+                            <Button type="primary">Add Role</Button>
+                        </Link>
+                    }
+                >
+                    <Table columns={columns} dataSource={roles} rowKey="id" pagination={false} />
+                </Card>
+            </div>
         </div>
     );
 }
