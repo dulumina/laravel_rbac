@@ -38,13 +38,12 @@ export default function TeamsIndex({ teams }: Props) {
                         <List.Item
                             actions={[
                                 <Tooltip title={team.role === 'member' ? 'View Team' : 'Edit Team'} key="action">
-                                    <Button
-                                        icon={team.role === 'member' ? <EyeOutlined /> : <EditOutlined />}
-                                        type="text"
-                                        asChild
-                                    >
-                                        <Link href={edit(team.slug).url} />
-                                    </Button>
+                                    <Link href={edit(team.slug).url}>
+                                        <Button
+                                            icon={team.role === 'member' ? <EyeOutlined /> : <EditOutlined />}
+                                            type="text"
+                                        />
+                                    </Link>
                                 </Tooltip>
                             ]}
                             className="bg-white hover:bg-gray-50 transition-colors p-5 rounded-xl mb-3 border border-gray-100 shadow-sm"
