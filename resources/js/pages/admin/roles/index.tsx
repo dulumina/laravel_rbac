@@ -1,7 +1,8 @@
-import { DeleteOutlined, EditOutlined, SafetyCertificateOutlined } from '@ant-design/icons';
+import { DeleteOutlined, EditOutlined, MoreOutlined, SafetyCertificateOutlined } from '@ant-design/icons';
 import { Head, Link, router } from '@inertiajs/react';
-import { Button, Card, Popconfirm, Space, Tag } from 'antd';
+import { Button, Card, Dropdown, Modal, Space, Tag } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
+import type { MenuProps } from 'antd';
 import { create, destroy, edit, index } from '@/actions/App/Http/Controllers/Admin/RoleController';
 import DataTable from '@/components/data-table';
 
@@ -50,23 +51,42 @@ export default function RoleIndex({ roles, total, page, perPage, search }: Props
         {
             title: 'Actions',
             key: 'actions',
-            render: (_, record) => (
-                <Space size="middle">
-                    <Link href={edit(record.id).url}>
-                        <Button icon={<EditOutlined />} />
-                    </Link>
-                    <Popconfirm
-                        title="Delete role"
-                        description="Are you sure to delete this role?"
-                        onConfirm={() => router.delete(destroy(record.id).url)}
-                        okText="Yes"
-                        cancelText="No"
-                        disabled={record.name === 'super-admin'}
-                    >
-                        <Button danger icon={<DeleteOutlined />} disabled={record.name === 'super-admin'} />
-                    </Popconfirm>
-                </Space>
-            ),
+            width: 60,
+            render: (_, record) => {
+                const isSuperAdmin = record.name === 'super-admin';
+
+                const items: MenuProps['items'] = [
+                    {
+                        key: 'edit',
+                        icon: <EditOutlined />,
+                        label: 'Edit',
+                        onClick: () => router.get(edit(record.id).url),
+                    },
+                    { type: 'divider' },
+                    {
+                        key: 'delete',
+                        icon: <DeleteOutlined />,
+                        label: 'Delete',
+                        danger: true,
+                        disabled: isSuperAdmin,
+                        onClick: () =>
+                            Modal.confirm({
+                                title: 'Delete role',
+                                content: `Are you sure you want to delete "${record.name}"?`,
+                                okText: 'Yes',
+                                cancelText: 'No',
+                                okType: 'danger',
+                                onOk: () => router.delete(destroy(record.id).url),
+                            }),
+                    },
+                ];
+
+                return (
+                    <Dropdown menu={{ items }} trigger={['click']} placement="bottomRight">
+                        <Button type="text" icon={<MoreOutlined />} size="small" />
+                    </Dropdown>
+                );
+            },
         },
     ];
 

@@ -1,7 +1,8 @@
-import { DeleteOutlined, EditOutlined, UserOutlined } from '@ant-design/icons';
+import { DeleteOutlined, EditOutlined, MoreOutlined, UserOutlined } from '@ant-design/icons';
 import { Head, Link, router } from '@inertiajs/react';
-import { Button, Card, Popconfirm, Space, Tag, Typography } from 'antd';
+import { Button, Card, Dropdown, Modal, Space, Tag, Typography } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
+import type { MenuProps } from 'antd';
 import { create, destroy, edit, index } from '@/actions/App/Http/Controllers/Admin/UserController';
 import DataTable from '@/components/data-table';
 
@@ -56,22 +57,39 @@ export default function UserIndex({ users, total, page, perPage, search }: Props
         {
             title: 'Actions',
             key: 'actions',
-            render: (_, record) => (
-                <Space size="middle">
-                    <Link href={edit(record.id).url}>
-                        <Button icon={<EditOutlined />} />
-                    </Link>
-                    <Popconfirm
-                        title="Delete user"
-                        description="Are you sure to delete this user?"
-                        onConfirm={() => router.delete(destroy(record.id).url)}
-                        okText="Yes"
-                        cancelText="No"
-                    >
-                        <Button danger icon={<DeleteOutlined />} />
-                    </Popconfirm>
-                </Space>
-            ),
+            width: 60,
+            render: (_, record) => {
+                const items: MenuProps['items'] = [
+                    {
+                        key: 'edit',
+                        icon: <EditOutlined />,
+                        label: 'Edit',
+                        onClick: () => router.get(edit(record.id).url),
+                    },
+                    { type: 'divider' },
+                    {
+                        key: 'delete',
+                        icon: <DeleteOutlined />,
+                        label: 'Delete',
+                        danger: true,
+                        onClick: () =>
+                            Modal.confirm({
+                                title: 'Delete user',
+                                content: `Are you sure you want to delete "${record.name}"?`,
+                                okText: 'Yes',
+                                cancelText: 'No',
+                                okType: 'danger',
+                                onOk: () => router.delete(destroy(record.id).url),
+                            }),
+                    },
+                ];
+
+                return (
+                    <Dropdown menu={{ items }} trigger={['click']} placement="bottomRight">
+                        <Button type="text" icon={<MoreOutlined />} size="small" />
+                    </Dropdown>
+                );
+            },
         },
     ];
 
