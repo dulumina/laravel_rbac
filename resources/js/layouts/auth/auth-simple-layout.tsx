@@ -62,7 +62,7 @@ export default function AuthSimpleLayout({ children, title, description }: AuthL
                             </div>
                             <div className="text-center">
                                 <div className="font-bold text-white text-lg leading-tight">
-                                    Laravel Slash
+                                    Laravel RBAC
                                 </div>
                             </div>
                         </Link>

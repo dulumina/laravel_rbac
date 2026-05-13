@@ -1,4 +1,5 @@
 import { Link, router, usePage } from '@inertiajs/react';
+import { Avatar, Dropdown, Layout, Menu, Tooltip } from 'antd';
 import {
     BookOpen,
     FolderGit2,
@@ -8,7 +9,6 @@ import {
     Users,
     Zap,
 } from 'lucide-react';
-import { Avatar, Dropdown, Layout, Menu, Tooltip } from 'antd';
 import type { MenuProps } from 'antd';
 import { useState } from 'react';
 import {
@@ -182,7 +182,7 @@ export function AppSidebar({ collapsed, onCollapse, isMobile }: AppSidebarProps)
                                     className="font-bold text-sm leading-tight truncate"
                                     style={{ color: isDark ? '#e2e8f0' : '#1e293b' }}
                                 >
-                                    Laravel Slash
+                                    Laravel RBAC
                                 </div>
                                 <div className="text-xs leading-tight" style={{ color: textColor }}>
                                     Admin Panel

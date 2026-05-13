@@ -136,7 +136,7 @@ export default function Readme() {
                                         className="!mb-1"
                                         style={{ color: isDark ? '#e2e8f0' : '#1e293b' }}
                                     >
-                                        Laravel Slash
+                                        Laravel RBAC
                                     </Title>
                                     <Text style={{ color: subText }}>
                                         A modern full-stack starter kit built with Laravel 13, React 19,
@@ -151,7 +151,7 @@ export default function Readme() {
                                 className="!text-base !leading-relaxed"
                                 style={{ color: isDark ? '#cbd5e1' : '#334155' }}
                             >
-                                Laravel Slash is a production-ready application starter kit that combines
+                                Laravel RBAC is a production-ready application starter kit that combines
                                 the robustness of the Laravel framework with the dynamism of modern
                                 frontend technologies. It provides a solid foundation for building
                                 full-stack web applications with a great developer experience.
@@ -263,9 +263,9 @@ export default function Readme() {
                                             border: `1px solid ${borderColor}`,
                                         }}
                                     >
-                                        git clone https://github.com/your-username/laravel_slash.git
+                                        git clone https://github.com/dulumina/laravel_rbac.git
                                         <br />
-                                        cd laravel_slash
+                                        cd laravel_rbac
                                     </div>
                                 </div>
 
