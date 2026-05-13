@@ -1,17 +1,28 @@
 import { App, ConfigProvider, theme } from 'antd';
 import type { ReactNode } from 'react';
 import { useAppearance } from '@/hooks/use-appearance';
+import { useColorTheme } from '@/hooks/use-color-theme';
+
+function hexToRgb(hex: string): string {
+    const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+    if (!result) {
+        return '99, 102, 241';
+    }
+    return `${parseInt(result[1], 16)}, ${parseInt(result[2], 16)}, ${parseInt(result[3], 16)}`;
+}
 
 export default function AntdConfigProvider({ children }: { children: ReactNode }) {
     const { resolvedAppearance } = useAppearance();
+    const { color: primaryColor } = useColorTheme();
     const isDark = resolvedAppearance === 'dark';
+    const primaryRgb = hexToRgb(primaryColor);
 
     return (
         <ConfigProvider
             theme={{
                 algorithm: isDark ? theme.darkAlgorithm : theme.defaultAlgorithm,
                 token: {
-                    colorPrimary: '#6366f1',
+                    colorPrimary: primaryColor,
                     colorSuccess: '#10b981',
                     colorWarning: '#f59e0b',
                     colorError: '#ef4444',
@@ -46,12 +57,12 @@ export default function AntdConfigProvider({ children }: { children: ReactNode }
                         darkSubMenuItemBg: 'transparent',
                         itemBg: 'transparent',
                         subMenuItemBg: 'transparent',
-                        itemSelectedBg: isDark ? 'rgba(99, 102, 241, 0.15)' : 'rgba(99, 102, 241, 0.08)',
-                        itemSelectedColor: '#6366f1',
-                        itemHoverBg: isDark ? 'rgba(255,255,255,0.05)' : 'rgba(99, 102, 241, 0.06)',
-                        itemHoverColor: '#6366f1',
+                        itemSelectedBg: isDark ? `rgba(${primaryRgb}, 0.15)` : `rgba(${primaryRgb}, 0.08)`,
+                        itemSelectedColor: primaryColor,
+                        itemHoverBg: isDark ? 'rgba(255,255,255,0.05)' : `rgba(${primaryRgb}, 0.06)`,
+                        itemHoverColor: primaryColor,
                         itemColor: isDark ? '#94a3b8' : '#64748b',
-                        itemActiveBg: isDark ? 'rgba(99, 102, 241, 0.2)' : 'rgba(99, 102, 241, 0.1)',
+                        itemActiveBg: isDark ? `rgba(${primaryRgb}, 0.2)` : `rgba(${primaryRgb}, 0.1)`,
                         activeBarWidth: 3,
                         activeBarBorderWidth: 3,
                         iconSize: 16,
@@ -68,7 +79,7 @@ export default function AntdConfigProvider({ children }: { children: ReactNode }
                     Table: {
                         borderRadius: 10,
                         headerBg: isDark ? '#1e1e2e' : '#f8fafc',
-                        rowHoverBg: isDark ? 'rgba(255,255,255,0.03)' : 'rgba(99,102,241,0.04)',
+                        rowHoverBg: isDark ? 'rgba(255,255,255,0.03)' : `rgba(${primaryRgb}, 0.04)`,
                     },
                 },
             }}

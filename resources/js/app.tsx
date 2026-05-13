@@ -2,6 +2,7 @@ import { createInertiaApp } from '@inertiajs/react';
 import AntdConfigProvider from '@/components/antd-config-provider';
 import { Toaster } from '@/components/ui/sonner';
 import { initializeTheme } from '@/hooks/use-appearance';
+import { initializeColorTheme } from '@/hooks/use-color-theme';
 import AppLayout from '@/layouts/app-layout';
 import AuthLayout from '@/layouts/auth-layout';
 import SettingsLayout from '@/layouts/settings/layout';
@@ -40,3 +41,5 @@ createInertiaApp({
 
 // This will set light / dark mode on load...
 initializeTheme();
+// This will set color theme on load...
+initializeColorTheme();
