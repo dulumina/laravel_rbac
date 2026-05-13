@@ -1,3 +1,14 @@
+export type DatabaseNotification = {
+    id: string;
+    type: string;
+    notifiable_type: string;
+    notifiable_id: number;
+    data: any;
+    read_at: string | null;
+    created_at: string;
+    updated_at: string;
+};
+
 export type User = {
     id: number;
     name: string;
@@ -7,6 +18,8 @@ export type User = {
     two_factor_enabled?: boolean;
     created_at: string;
     updated_at: string;
+    notifications?: DatabaseNotification[];
+    unread_notifications_count?: number;
     [key: string]: unknown;
 };
 

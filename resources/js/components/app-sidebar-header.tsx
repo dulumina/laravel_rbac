@@ -167,20 +167,91 @@ export function AppSidebarHeader({ breadcrumbs = [], onMobileMenuClick }: AppSid
                 </button>
 
                 {/* Notifications */}
-                <button
-                    className="relative w-9 h-9 flex items-center justify-center rounded-xl cursor-pointer border-0 transition-all"
-                    style={{
-                        background: isDark ? 'rgba(255,255,255,0.05)' : 'rgba(99,102,241,0.06)',
-                        color: isDark ? '#94a3b8' : '#64748b',
-                    }}
-                    title="Notifications"
+                <Dropdown
+                    trigger={['click']}
+                    placement="bottomRight"
+                    dropdownRender={() => (
+                        <div
+                            style={{
+                                width: 320,
+                                background: isDark ? '#1e1e2e' : '#fff',
+                                borderRadius: 12,
+                                boxShadow: '0 10px 25px rgba(0,0,0,0.1)',
+                                border: `1px solid ${borderColor}`,
+                                padding: '12px 0',
+                            }}
+                        >
+                            <div className="px-4 pb-2 flex justify-between items-center border-b" style={{ borderColor }}>
+                                <span className="font-semibold" style={{ color: isDark ? '#e2e8f0' : '#1e293b' }}>
+                                    Notifications
+                                </span>
+                                {user.unread_notifications_count !== undefined && user.unread_notifications_count > 0 && (
+                                    <button
+                                        onClick={() => router.post('/notifications/mark-all-read')}
+                                        className="text-xs text-indigo-500 hover:text-indigo-600 border-0 bg-transparent cursor-pointer"
+                                    >
+                                        Mark all as read
+                                    </button>
+                                )}
+                            </div>
+                            <div className="max-h-80 overflow-y-auto">
+                                {user.notifications && user.notifications.length > 0 ? (
+                                    user.notifications.map((notification) => (
+                                        <div
+                                            key={notification.id}
+                                            className="px-4 py-3 hover:bg-black/5 dark:hover:bg-white/5 cursor-pointer flex gap-3 transition-colors border-b last:border-0"
+                                            style={{ borderColor }}
+                                            onClick={() => {
+                                                if (!notification.read_at) {
+                                                    router.post(`/notifications/${notification.id}/mark-read`, {}, { preserveScroll: true });
+                                                }
+                                            }}
+                                        >
+                                            <div className="flex-1 min-w-0">
+                                                <div
+                                                    className="text-sm"
+                                                    style={{
+                                                        color: isDark ? '#e2e8f0' : '#1e293b',
+                                                        fontWeight: notification.read_at ? 400 : 600,
+                                                    }}
+                                                >
+                                                    {notification.data?.message || 'New notification'}
+                                                </div>
+                                                <div className="text-xs mt-1" style={{ color: isDark ? '#94a3b8' : '#64748b' }}>
+                                                    {new Date(notification.created_at).toLocaleDateString()}
+                                                </div>
+                                            </div>
+                                            {!notification.read_at && (
+                                                <div className="w-2 h-2 rounded-full bg-indigo-500 mt-1.5 flex-shrink-0" />
+                                            )}
+                                        </div>
+                                    ))
+                                ) : (
+                                    <div className="py-8 text-center text-sm" style={{ color: isDark ? '#94a3b8' : '#64748b' }}>
+                                        No new notifications
+                                    </div>
+                                )}
+                            </div>
+                        </div>
+                    )}
                 >
-                    <BellOutlined style={{ fontSize: 15 }} />
-                    <span
-                        className="absolute top-1.5 right-1.5 w-2 h-2 rounded-full"
-                        style={{ background: '#ef4444', boxShadow: '0 0 0 2px ' + (isDark ? '#1e1e2e' : '#fff') }}
-                    />
-                </button>
+                    <button
+                        className="relative w-9 h-9 flex items-center justify-center rounded-xl cursor-pointer border-0 transition-all"
+                        style={{
+                            background: isDark ? 'rgba(255,255,255,0.05)' : 'rgba(99,102,241,0.06)',
+                            color: isDark ? '#94a3b8' : '#64748b',
+                        }}
+                        title="Notifications"
+                    >
+                        <BellOutlined style={{ fontSize: 15 }} />
+                        {user.unread_notifications_count !== undefined && user.unread_notifications_count > 0 && (
+                            <span
+                                className="absolute top-1.5 right-1.5 w-2 h-2 rounded-full"
+                                style={{ background: '#ef4444', boxShadow: '0 0 0 2px ' + (isDark ? '#1e1e2e' : '#fff') }}
+                            />
+                        )}
+                    </button>
+                </Dropdown>
 
                 {/* User Avatar Dropdown */}
                 <Dropdown menu={{ items: userMenuItems }} trigger={['click']} placement="bottomRight">
