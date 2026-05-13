@@ -20,10 +20,11 @@ class RoleAndPermissionSeeder extends Seeder
 
         // Create permissions
         $permissions = [
-            'manage users',
-            'manage roles',
-            'manage permissions',
-            'access admin',
+            'admin.access',
+            'user.view', 'user.create', 'user.edit', 'user.delete',
+            'role.view', 'role.create', 'role.edit', 'role.delete',
+            'permission.view', 'permission.create', 'permission.edit', 'permission.delete',
+            'permission.scan', 'permission.store-bulk',
         ];
 
         foreach ($permissions as $permission) {
@@ -35,7 +36,7 @@ class RoleAndPermissionSeeder extends Seeder
         $role->givePermissionTo(Permission::all());
 
         $adminRole = Role::firstOrCreate(['name' => 'admin']);
-        $adminRole->givePermissionTo(['manage users', 'access admin']);
+        $adminRole->givePermissionTo(['admin.access', 'user.view', 'user.create', 'user.edit', 'user.delete']);
 
         // Assign super-admin to the admin user
         $user = User::where('email', 'superadmin@localhost')->first();

@@ -78,17 +78,22 @@ class PermissionScanner
         }
 
         // Skip other non-resource routes
-        $skipRoutes = ['dashboard', 'ckan-sync', 'password.first', 'storage.', 'up'];
+        $skipRoutes = [
+            'dashboard', 'ckan-sync', 'password.first', 'storage.', 'up',
+            'profile.', 'security.', 'teams.', 'team.', 'appearance.', 'two-factor.',
+            'invitations.', 'invitation.', 'user-password.', 'boost.', 'ignition.',
+            'sanctum.', 'livewire.', 'admin.store-bulk'
+        ];
         foreach ($skipRoutes as $skipRoute) {
             if (Str::startsWith($routeName, $skipRoute)) {
                 return null;
             }
         }
 
-        // Parse route name (e.g., "datasets.index" -> resource: "datasets", action: "index")
+        // Parse route name (e.g., "admin.users.index" -> resource: "users", action: "index")
         if (str_contains($routeName, '.')) {
             $parts = explode('.', $routeName);
-            $resource = $parts[0];
+            $resource = count($parts) >= 2 ? $parts[count($parts) - 2] : $parts[0];
             $action = end($parts);
 
             // Map to permission action
@@ -195,6 +200,12 @@ class PermissionScanner
                     foreach ($matches[1] as $permission) {
                         // Skip variable interpolation or empty strings
                         if (empty($permission) || str_contains($permission, '$')) {
+                            continue;
+                        }
+
+                        // Enforce normalized permission format (must contain a dot)
+                        // This filters out Policy methods like 'update', 'updateMember', etc.
+                        if (! str_contains($permission, '.')) {
                             continue;
                         }
 
