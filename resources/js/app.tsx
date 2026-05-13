@@ -1,7 +1,6 @@
 import { createInertiaApp } from '@inertiajs/react';
 import AntdConfigProvider from '@/components/antd-config-provider';
 import { Toaster } from '@/components/ui/sonner';
-import { TooltipProvider } from '@/components/ui/tooltip';
 import { initializeTheme } from '@/hooks/use-appearance';
 import AppLayout from '@/layouts/app-layout';
 import AuthLayout from '@/layouts/auth-layout';
@@ -28,15 +27,13 @@ createInertiaApp({
     withApp(app) {
         return (
             <AntdConfigProvider>
-                <TooltipProvider delayDuration={0}>
-                    {app}
-                    <Toaster />
-                </TooltipProvider>
+                {app}
+                <Toaster />
             </AntdConfigProvider>
         );
     },
     progress: {
-        color: '#4B5563',
+        color: '#6366f1',
     },
 });
 
