@@ -15,15 +15,27 @@ class RoleController extends Controller
     /**
      * Display a listing of the roles.
      */
-    public function index(): Response
+    public function index(Request $request): Response
     {
-        return Inertia::render('admin/roles/index', [
-            'roles' => Role::with('permissions')->get()->map(fn ($role) => [
+        $search = $request->get('search', '');
+        $perPage = (int) $request->get('perPage', 10);
+
+        $roles = Role::with('permissions')
+            ->when($search, fn ($q) => $q->where('name', 'like', "%{$search}%"))
+            ->paginate($perPage)
+            ->through(fn ($role) => [
                 'id' => $role->id,
                 'name' => $role->name,
                 'permissions' => $role->permissions->pluck('name'),
                 'created_at' => $role->created_at->format('Y-m-d H:i:s'),
-            ]),
+            ]);
+
+        return Inertia::render('admin/roles/index', [
+            'roles' => $roles->items(),
+            'total' => $roles->total(),
+            'page' => $roles->currentPage(),
+            'perPage' => $roles->perPage(),
+            'search' => $search,
         ]);
     }
 

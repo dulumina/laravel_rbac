@@ -50,16 +50,29 @@ class UserController extends Controller
     /**
      * Display a listing of the users.
      */
-    public function index(): Response
+    public function index(Request $request): Response
     {
-        return Inertia::render('admin/users/index', [
-            'users' => User::with('roles')->get()->map(fn ($user) => [
+        $search = $request->get('search', '');
+        $perPage = (int) $request->get('perPage', 10);
+
+        $users = User::with('roles')
+            ->when($search, fn ($q) => $q->where('name', 'like', "%{$search}%")
+                ->orWhere('email', 'like', "%{$search}%"))
+            ->paginate($perPage)
+            ->through(fn ($user) => [
                 'id' => $user->id,
                 'name' => $user->name,
                 'email' => $user->email,
                 'roles' => $user->roles->pluck('name'),
                 'created_at' => $user->created_at->format('Y-m-d H:i:s'),
-            ]),
+            ]);
+
+        return Inertia::render('admin/users/index', [
+            'users' => $users->items(),
+            'total' => $users->total(),
+            'page' => $users->currentPage(),
+            'perPage' => $users->perPage(),
+            'search' => $search,
         ]);
     }
 

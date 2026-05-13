@@ -1,8 +1,9 @@
 import { CheckCircleOutlined, CloseCircleOutlined, FileTextOutlined, LeftOutlined, PlusOutlined } from '@ant-design/icons';
-import { Head, Link, router } from '@inertiajs/react';
-import { Badge, Button, Card, Space, Table, Tag, Tooltip, Typography } from 'antd';
+import { Head, router } from '@inertiajs/react';
+import { Badge, Button, Card, Space, Tag, Tooltip, Typography } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
 import { index, store, storeBulk } from '@/actions/App/Http/Controllers/Admin/PermissionController';
+import DataTable from '@/components/data-table';
 
 const { Text } = Typography;
 
@@ -33,13 +34,15 @@ export default function PermissionScan({ scanResults }: Props) {
         }
     };
 
+    const features = Array.from(new Set(scanResults.map((r) => r.feature)));
+
     const columns: ColumnsType<ScanResult> = [
         {
             title: 'Feature',
             dataIndex: 'feature',
             key: 'feature',
             render: (text) => <Tag color="blue">{text}</Tag>,
-            filters: Array.from(new Set(scanResults.map(r => r.feature))).map(f => ({ text: f, value: f })),
+            filters: features.map((f) => ({ text: f, value: f })),
             onFilter: (value, record) => record.feature === value,
         },
         {
@@ -117,39 +120,34 @@ export default function PermissionScan({ scanResults }: Props) {
     return (
         <div className="p-6">
             <Head title="Scan Permissions" />
-            <Card
-                title={
-                    <Space>
+            <Card>
+                <DataTable
+                    columns={columns}
+                    data={scanResults}
+                    rowKey="name"
+                    clientSide
+                    searchPlaceholder="Search permissions..."
+                    title={
                         <Button
                             icon={<LeftOutlined />}
                             onClick={() => router.get(index().url)}
                         />
-                        <span>Permission Scan Results</span>
-                    </Space>
-                }
-                extra={
-                    <Space size="large">
+                    }
+                    extra={
                         <Space>
                             <Badge status="success" text="In Sync" />
                             <Badge status="error" text="Missing from DB" />
                             <Badge status="warning" text="Unused in Code" />
+                            <Button
+                                type="primary"
+                                icon={<PlusOutlined />}
+                                disabled={!scanResults.some((r) => !r.in_db)}
+                                onClick={handleAddAllMissing}
+                            >
+                                Add All Missing
+                            </Button>
                         </Space>
-                        <Button
-                            type="primary"
-                            icon={<PlusOutlined />}
-                            disabled={!scanResults.some((r) => !r.in_db)}
-                            onClick={handleAddAllMissing}
-                        >
-                            Add All Missing
-                        </Button>
-                    </Space>
-                }
-            >
-                <Table
-                    columns={columns}
-                    dataSource={scanResults}
-                    rowKey="name"
-                    pagination={{ pageSize: 20 }}
+                    }
                 />
             </Card>
         </div>

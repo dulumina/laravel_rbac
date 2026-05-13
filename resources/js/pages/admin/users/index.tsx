@@ -1,8 +1,9 @@
 import { DeleteOutlined, EditOutlined, UserOutlined } from '@ant-design/icons';
 import { Head, Link, router } from '@inertiajs/react';
-import { Button, Card, Popconfirm, Space, Table, Tag, Typography } from 'antd';
+import { Button, Card, Popconfirm, Space, Tag, Typography } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
 import { create, destroy, edit, index } from '@/actions/App/Http/Controllers/Admin/UserController';
+import DataTable from '@/components/data-table';
 
 interface User {
     id: number;
@@ -14,9 +15,13 @@ interface User {
 
 interface Props {
     users: User[];
+    total: number;
+    page: number;
+    perPage: number;
+    search: string;
 }
 
-export default function UserIndex({ users }: Props) {
+export default function UserIndex({ users, total, page, perPage, search }: Props) {
     const columns: ColumnsType<User> = [
         {
             title: 'Name',
@@ -70,26 +75,36 @@ export default function UserIndex({ users }: Props) {
         },
     ];
 
+    const navigate = (params: Record<string, any>) => {
+        router.get(index().url, { ...params }, { preserveState: true, preserveScroll: true });
+    };
+
     return (
         <div className="p-4 sm:p-6 lg:p-8">
             <Head title="User Management" />
             <div className="max-w-7xl mx-auto">
-                <Card
-                    title={
-                        <Space>
-                            <UserOutlined />
-                            <span>User Management</span>
-                        </Space>
-                    }
-                    extra={
-                        <Link href={create().url}>
-                            <Button type="primary" icon={<UserOutlined />}>
-                                Add User
-                            </Button>
-                        </Link>
-                    }
-                >
-                    <Table columns={columns} dataSource={users} rowKey="id" pagination={{ pageSize: 10 }} />
+                <Card>
+                    <DataTable
+                        columns={columns}
+                        data={users}
+                        rowKey="id"
+                        total={total}
+                        page={page}
+                        perPage={perPage}
+                        search={search}
+                        onPageChange={(p) => navigate({ page: p, perPage, search })}
+                        onPerPageChange={(pp) => navigate({ page: 1, perPage: pp, search })}
+                        onSearchChange={(s) => navigate({ page: 1, perPage, search: s })}
+                        searchPlaceholder="Search users..."
+                        title="User Management"
+                        extra={
+                            <Link href={create().url}>
+                                <Button type="primary" icon={<UserOutlined />}>
+                                    Add User
+                                </Button>
+                            </Link>
+                        }
+                    />
                 </Card>
             </div>
         </div>
