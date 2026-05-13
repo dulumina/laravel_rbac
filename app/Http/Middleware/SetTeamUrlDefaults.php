@@ -16,11 +16,19 @@ class SetTeamUrlDefaults
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if ($currentTeam = $request->user()?->currentTeam) {
-            URL::defaults([
-                'current_team' => $currentTeam->slug,
-                'team' => $currentTeam->slug,
-            ]);
+        if ($user = $request->user()) {
+            $currentTeam = $user->currentTeam ?: $user->fallbackTeam();
+
+            if ($currentTeam) {
+                if (! $user->current_team_id) {
+                    $user->forceFill(['current_team_id' => $currentTeam->id])->save();
+                }
+
+                URL::defaults([
+                    'current_team' => $currentTeam->slug,
+                    'team' => $currentTeam->slug,
+                ]);
+            }
         }
 
         return $next($request);

@@ -75,7 +75,7 @@ export default function PermissionIndex({ permissions }: Props) {
                         <div className="grid grid-cols-1 gap-x-8 gap-y-4 md:grid-cols-2 xl:grid-cols-4">
                             {groups.map((group) => (
                                 <div key={group} className="break-inside-avoid">
-                                    <Divider orientation="left" className="!my-4">
+                                    <Divider titlePlacement="left" className="!my-4">
                                         <Tag color="blue" className="px-2 py-0 text-xs font-bold uppercase">
                                             {group}
                                         </Tag>
