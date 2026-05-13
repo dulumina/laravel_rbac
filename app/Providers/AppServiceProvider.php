@@ -6,6 +6,7 @@ use Carbon\CarbonImmutable;
 use Illuminate\Auth\Middleware\RedirectIfAuthenticated;
 use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Validation\Rules\Password;
@@ -27,7 +28,7 @@ class AppServiceProvider extends ServiceProvider
     {
         $this->configureDefaults();
 
-        \Illuminate\Support\Facades\Gate::before(function ($user, $ability) {
+        Gate::before(function ($user, $ability) {
             return $user->hasRole('super-admin') ? true : null;
         });
 

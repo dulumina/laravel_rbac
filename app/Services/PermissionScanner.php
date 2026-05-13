@@ -82,7 +82,7 @@ class PermissionScanner
             'dashboard', 'ckan-sync', 'password.first', 'storage.', 'up',
             'profile.', 'security.', 'teams.', 'team.', 'appearance.', 'two-factor.',
             'invitations.', 'invitation.', 'user-password.', 'boost.', 'ignition.',
-            'sanctum.', 'livewire.', 'admin.store-bulk'
+            'sanctum.', 'livewire.', 'admin.store-bulk',
         ];
         foreach ($skipRoutes as $skipRoute) {
             if (Str::startsWith($routeName, $skipRoute)) {
