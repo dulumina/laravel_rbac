@@ -10,6 +10,14 @@ import {
     ArrowLeftOutlined,
     GithubOutlined,
     NodeIndexOutlined,
+    UserOutlined,
+    SafetyOutlined,
+    TeamOutlined,
+    BellOutlined,
+    ShieldOutlined,
+    AppstoreOutlined,
+    DashboardOutlined,
+    SettingOutlined,
 } from '@ant-design/icons';
 import { Button, Card, Col, Row, Typography, Tag, Divider } from 'antd';
 import { useAppearance } from '@/hooks/use-appearance';
@@ -48,6 +56,89 @@ const frontendPackages = [
     { name: 'sonner', version: '^2.0.0', description: 'Toast notifications' },
     { name: 'typescript', version: '^5.7.2', description: 'TypeScript language' },
     { name: 'vite', version: '^8.0.0', description: 'Build tool and dev server' },
+];
+
+const featuresData = [
+    {
+        icon: <UserOutlined />,
+        title: 'Authentication & Security',
+        items: [
+            'Login & Registration with rate limiting',
+            'Password reset via email',
+            'Email verification flow',
+            'Two-Factor Authentication (2FA / TOTP)',
+            'Password confirmation for sensitive actions',
+        ],
+    },
+    {
+        icon: <DashboardOutlined />,
+        title: 'Dashboard',
+        items: [
+            'Welcome banner with stats cards',
+            'Active users, roles & permissions metrics',
+            'Recent activity table & system timeline',
+        ],
+    },
+    {
+        icon: <SettingOutlined />,
+        title: 'Profile & Settings',
+        items: [
+            'Edit profile (name, email) with re-verification',
+            'Account deletion with confirmation',
+            'Security settings (password & 2FA management)',
+            'Theme appearance (light / dark / system)',
+        ],
+    },
+    {
+        icon: <TeamOutlined />,
+        title: 'Team Management',
+        items: [
+            'Multi-team support with personal team auto-creation',
+            'Team switching & role-based membership (Owner, Admin, Member)',
+            'Granular team permissions (update, delete, member, invitation)',
+            'Team invitations via email with 3-day expiry',
+        ],
+    },
+    {
+        icon: <ShieldOutlined />,
+        title: 'Role-Based Access Control (RBAC)',
+        items: [
+            'Spatie laravel-permission integration',
+            'Super-admin global bypass for all authorization',
+            'Dot-notation permission naming ({resource}.{action})',
+            'Flexible role & permission assignment per user',
+        ],
+    },
+    {
+        icon: <AppstoreOutlined />,
+        title: 'Admin Panel',
+        items: [
+            'User management (create, edit roles, delete)',
+            'Role management (create with permissions, edit, delete)',
+            'Permission management (create, bulk-create, delete)',
+            'Permission scanner — detect missing or unused permissions',
+        ],
+    },
+    {
+        icon: <BellOutlined />,
+        title: 'Notifications',
+        items: [
+            'In-app database notifications',
+            'Unread count badge with latest notifications dropdown',
+            'Mark single or all notifications as read',
+            'Delete notifications',
+        ],
+    },
+    {
+        icon: <SafetyOutlined />,
+        title: 'Security & Infrastructure',
+        items: [
+            'Production-grade password rules (min:12, mixed case, symbols)',
+            'Immutable dates with CarbonImmutable',
+            'Destructive DB commands prohibited in production',
+            'Full TypeScript with strict mode',
+        ],
+    },
 ];
 
 const requirements = [
@@ -168,6 +259,73 @@ export default function Readme() {
                                 TypeScript is used throughout for type safety.
                             </Paragraph>
                         </Card>
+                    </section>
+
+                    {/* Features */}
+                    <section>
+                        <div className="flex items-center gap-3 mb-6">
+                            <RocketOutlined style={{ fontSize: 22, color: '#6366f1' }} />
+                            <Title
+                                level={3}
+                                className="!mb-0"
+                                style={{ color: isDark ? '#e2e8f0' : '#1e293b' }}
+                            >
+                                Features
+                            </Title>
+                        </div>
+
+                        <Row gutter={[16, 16]}>
+                            {featuresData.map((feature, i) => (
+                                <Col xs={24} md={12} key={i}>
+                                    <Card
+                                        style={{
+                                            background: cardBg,
+                                            border: `1px solid ${borderColor}`,
+                                            borderRadius: 12,
+                                            height: '100%',
+                                        }}
+                                        styles={{ body: { padding: '20px' } }}
+                                    >
+                                        <div className="flex items-start gap-3">
+                                            <div
+                                                className="flex h-10 w-10 items-center justify-center rounded-xl flex-shrink-0 mt-0.5"
+                                                style={{
+                                                    background: isDark
+                                                        ? 'rgba(99, 102, 241, 0.15)'
+                                                        : 'rgba(99, 102, 241, 0.08)',
+                                                    color: '#6366f1',
+                                                }}
+                                            >
+                                                {feature.icon}
+                                            </div>
+                                            <div className="min-w-0 flex-1">
+                                                <Text
+                                                    className="!text-sm font-semibold block mb-2"
+                                                    style={{ color: isDark ? '#e2e8f0' : '#1e293b' }}
+                                                >
+                                                    {feature.title}
+                                                </Text>
+                                                <ul className="list-none p-0 m-0 space-y-1">
+                                                    {feature.items.map((item, j) => (
+                                                        <li
+                                                            key={j}
+                                                            className="flex items-start gap-2 text-sm"
+                                                            style={{ color: subText }}
+                                                        >
+                                                            <CheckCircleOutlined
+                                                                className="mt-0.5 flex-shrink-0"
+                                                                style={{ fontSize: 12, color: '#10b981' }}
+                                                            />
+                                                            <span>{item}</span>
+                                                        </li>
+                                                    ))}
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </Card>
+                                </Col>
+                            ))}
+                        </Row>
                     </section>
 
                     {/* System Requirements */}
