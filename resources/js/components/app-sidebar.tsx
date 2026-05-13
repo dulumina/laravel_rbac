@@ -33,9 +33,10 @@ const { Sider } = Layout;
 type AppSidebarProps = {
     collapsed: boolean;
     onCollapse: (value: boolean) => void;
+    isMobile?: boolean;
 };
 
-export function AppSidebar({ collapsed, onCollapse }: AppSidebarProps) {
+export function AppSidebar({ collapsed, onCollapse, isMobile }: AppSidebarProps) {
     const page = usePage();
     const user = page.props.auth.user as any;
     const currentTeam = page.props.currentTeam as any;
@@ -140,11 +141,12 @@ export function AppSidebar({ collapsed, onCollapse }: AppSidebarProps) {
                 background: sidebarBg,
                 borderRight: `1px solid ${borderColor}`,
                 overflow: 'hidden',
-                position: 'fixed',
+                position: isMobile ? 'relative' : 'fixed',
                 left: 0,
                 top: 0,
                 bottom: 0,
                 zIndex: 100,
+                height: isMobile ? '100vh' : 'auto',
                 transition: 'width 0.2s cubic-bezier(0.4, 0, 0.2, 1)',
             }}
         >

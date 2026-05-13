@@ -8,18 +8,21 @@ import {
     SettingOutlined,
     SunOutlined,
     MoonOutlined,
+    MenuOutlined,
 } from '@ant-design/icons';
 import { useInitials } from '@/hooks/use-initials';
 import { useAppearance } from '@/hooks/use-appearance';
+import { useIsMobile } from '@/hooks/use-mobile';
 import { logout } from '@/routes';
 import { edit as profileEdit } from '@/routes/profile';
 import type { BreadcrumbItem } from '@/types';
 
 type AppSidebarHeaderProps = {
     breadcrumbs?: BreadcrumbItem[];
+    onMobileMenuClick?: () => void;
 };
 
-export function AppSidebarHeader({ breadcrumbs = [] }: AppSidebarHeaderProps) {
+export function AppSidebarHeader({ breadcrumbs = [], onMobileMenuClick }: AppSidebarHeaderProps) {
     const page = usePage();
     const { auth } = page.props;
     const getInitials = useInitials();
@@ -91,7 +94,7 @@ export function AppSidebarHeader({ breadcrumbs = [] }: AppSidebarHeaderProps) {
 
     return (
         <header
-            className="flex items-center gap-4 px-6"
+            className="flex items-center gap-4 px-4 sm:px-6"
             style={{
                 height: 64,
                 background: headerBg,
@@ -103,8 +106,20 @@ export function AppSidebarHeader({ breadcrumbs = [] }: AppSidebarHeaderProps) {
                 zIndex: 50,
             }}
         >
+            {/* Mobile Menu Toggle */}
+            <button
+                className="md:hidden flex items-center justify-center w-9 h-9 rounded-xl cursor-pointer border-0 transition-all"
+                style={{
+                    background: isDark ? 'rgba(255,255,255,0.05)' : 'rgba(99,102,241,0.06)',
+                    color: isDark ? '#e2e8f0' : '#1e293b',
+                }}
+                onClick={onMobileMenuClick}
+            >
+                <MenuOutlined style={{ fontSize: 16 }} />
+            </button>
+
             {/* Breadcrumbs */}
-            <div className="flex-1 min-w-0">
+            <div className="flex-1 min-w-0 hidden sm:block">
                 {breadcrumbs.length > 0 && (
                     <Breadcrumb
                         items={breadcrumbItems}
