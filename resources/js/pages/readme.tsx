@@ -14,7 +14,7 @@ import {
     SafetyOutlined,
     TeamOutlined,
     BellOutlined,
-    ShieldOutlined,
+    SafetyCertificateOutlined,
     AppstoreOutlined,
     DashboardOutlined,
     SettingOutlined,
@@ -100,7 +100,7 @@ const featuresData = [
         ],
     },
     {
-        icon: <ShieldOutlined />,
+        icon: <SafetyCertificateOutlined />,
         title: 'Role-Based Access Control (RBAC)',
         items: [
             'Spatie laravel-permission integration',
